@@ -13,7 +13,7 @@ struct Direccion
     int k_amb ;
 
 };
-struct Direccion *Oeste_new( bool direccion, int k_carros_e, int pro_lle, int tie_sem,
+struct Direccion *Direccion_new( bool direccion, int k_carros_e, int pro_lle, int tie_sem,
 		int vel_min, int vel_max, int k_veh_x_pas, int k_amb) {
     struct example *p = malloc(sizeof *p);
    p->direccion=direccion;
