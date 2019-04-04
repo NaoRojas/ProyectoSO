@@ -9,5 +9,5 @@ struct Este
     int vel_min = 4;
     int vel_min = 8;
     int k_veh_x_pas = 7;
-    int k_amb = 4 * k_carros_e / 100;
-}
+    int k_amb = 4 * 300 / 100;
+};

@@ -1,0 +1,16 @@
+10#longitud del puente
+2#modo en que se va a ejecutar (normal, sema ́foro o tr ́ansito) 
+300#Cantidad de carros
+5#Promedio de llegada
+6#Tiempo del sema ́foro
+4#Velocidad mınima
+8#Velocidad mınima
+7#Cantidad de vehıculos por paso 
+4#Porcentaje de ambulancias
+288#Cantidad de carros
+7#Promedio de llegada
+3#Tiempo del semaforo
+12#Velocidad mınima
+30#Velocidad maxima
+3#Cantidad de vehıculos por paso
+40#Porcentaje de ambulancias

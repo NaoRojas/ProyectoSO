@@ -9,5 +9,5 @@ struct Oeste
     int vel_min = 12;
     int vel_min = 30;
     int k_veh_x_pas = 3;
-    int k_amb = 40 * k_carros_e / 100;
-}
+    int k_amb = 40 * 288 / 100;
+};

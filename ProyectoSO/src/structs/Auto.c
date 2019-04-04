@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct auto
+typedef struct
 {
     int prioridad;
     bool direccion;
