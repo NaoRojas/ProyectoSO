@@ -1,7 +1,7 @@
 compilar: ProyectoSO
 	./Proyectos
 ProyectoSO: Auto Este Oeste Puente Proyecto.c
-
+	
 ProyectoSO.c:
 	gcc Auto.c -o Auto -lpthread
 Auto:
