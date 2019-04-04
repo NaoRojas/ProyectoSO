@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
+#include <string.h>
 //#include "Auto.c"
 //#include "Este.c"
 //#include "Oeste.c"
@@ -15,23 +16,23 @@
 
 int main(int argc, char** argv)
 {
-	FILE *fp;
-	fp = fopen ("data/prueba.txt", "r" );
+	FILE *fichero;
+	fichero = fopen ("data/data.txt", "r" );
 	char caracter;
-
-	if (fp) {
-		while((caracter = fgetc(fp)) != EOF){
-			if(caracter != "#"){
-				printf("%s",caracter);
-			}else{
-
-			}
+	char textoExtraido[60];
+	int posicion = 0;
+	int number[15];
+	if (fichero) {
+	    fgets(textoExtraido, 60, fichero);
+		for(int i =0; i < 15; i++){
+			fscanf (fichero, "%d", &number[i]);
+			printf("%d \n", number[i]);
 		}
 	}
 	else{
 		printf("NO SIRVO");
 		exit (1);
 	}
-	fclose ( fp );
+	fclose(fichero);
 	return EXIT_SUCCESS;
 }
