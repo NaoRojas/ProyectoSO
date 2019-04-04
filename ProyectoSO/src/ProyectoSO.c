@@ -9,10 +9,10 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <string.h>
-//#include "Auto.c"
-//#include "Este.c"
-//#include "Oeste.c"
-//#include "Puente.c"
+#include "Auto.c"
+#include "Este.c"
+#include "Oeste.c"
+#include "Puente.c"
 
 int main(int argc, char** argv)
 {
@@ -26,7 +26,7 @@ int main(int argc, char** argv)
 	    fgets(textoExtraido, 60, fichero);
 		for(int i =0; i < 15; i++){
 			fscanf (fichero, "%d", &number[i]);
-			printf("%d \n", number[i]);
+
 		}
 	}
 	else{

@@ -1,19 +1,15 @@
-compilar: semaforos.o algPeterson.o alg2.o alg1.o
-	
-semaforos.o:
-	gcc semaforos.c -o semaforos -lpthread
-algPeterson.o:
-	gcc algPeterson.c -o algPeterson -lpthread
-alg2.o:
-	gcc alg2.c -o alg2 -lpthread
-alg1.o:
-	gcc alg1.c -o alg1 -lpthread
-semaforos: semaforos.o
-	./semaforos
-algPeterson: algPeterson.o
-	./algPeterson
-alg2: alg2.o
-	./alg2
-alg1: alg1.o
-	./alg1
+compilar: ProyectoSO
+	./Proyectos
+ProyectoSO: Auto Este Oeste Puente Proyecto.c
+
+ProyectoSO.c:
+	gcc Auto.c -o Auto -lpthread
+Auto:
+	gcc Auto.c -o Auto -lpthread
+Este:
+	gcc Este.c -o Este -lpthread
+Oeste:
+	gcc Oeste.c -o Oeste -lpthread
+Puente:
+	gcc Puente.c -o Puente -lpthread
 
