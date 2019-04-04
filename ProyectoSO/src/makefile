@@ -1,15 +1,15 @@
 compilar: ProyectoSO
-	./Proyectos
-ProyectoSO: Auto Este Oeste Puente Proyecto.c
 	
+ProyectoSO: ProyectoSO.c
+	./ProyectoSO
 ProyectoSO.c:
-	gcc Auto.c -o Auto -lpthread
+	gcc ProyectoSO.c -o ProyectoSO -lpthread
 Auto:
-	gcc Auto.c -o Auto -lpthread
+	gcc structs/Auto.c -o Auto
 Este:
-	gcc Este.c -o Este -lpthread
+	gcc structs/Este.c -o Este
 Oeste:
-	gcc Oeste.c -o Oeste -lpthread
+	gcc structs/Oeste.c -o Oeste
 Puente:
-	gcc Puente.c -o Puente -lpthread
+	gcc structs/Puente.c -o Puente
 
