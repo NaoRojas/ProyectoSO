@@ -22,7 +22,6 @@ int main(int argc, char** argv) {
     Este e;
     Oeste o;
     printf("Informacion de auto %d %d", a.prioridad, a.direccion);
-
     FILE *fichero;
     fichero = fopen("data/data.txt", "r");
     char caracter;
@@ -55,8 +54,6 @@ int main(int argc, char** argv) {
     o.vel_max = number[5];
     o.k_veh_x_pas = number[6];
     o.k_amb = number[7];
-
-
 
     return EXIT_SUCCESS;
 }
