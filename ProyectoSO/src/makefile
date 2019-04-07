@@ -1,15 +1,13 @@
-compilar: ProyectoSO
+compilar: Main
 	
-ProyectoSO: ProyectoSO.c
-	./ProyectoSO
-ProyectoSO.c:
-	gcc ProyectoSO.c -o ProyectoSO -lpthread
-Auto:
-	gcc structs/Auto.c -o Auto
-Este:
-	gcc structs/Este.c -o Este
-Oeste:
-	gcc structs/Oeste.c -o Oeste
-Puente:
-	gcc structs/Puente.c -o Puente
+Main: Main.o Puente.o Direccion.o Auto.o
+	gcc -o proyecto Main.o Puente.o Direccion.o Auto.o
+Main.o: Puente.c Direccion.c Auto.c
+	gcc Main.c -o Main -lpthread
+Auto.o:
+	gcc Auto.c -o Auto
+Direccion.o:
+	gcc Direccion.c -o Direccion
+Puente.o: Direccion.c
+	gcc Puente.c -o Puente
 

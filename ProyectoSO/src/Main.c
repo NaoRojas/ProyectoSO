@@ -10,18 +10,20 @@
 #include <pthread.h>
 #include <string.h>
 #include "Auto.c"
-#include "Direccion.c"
+#include "PuntosCardinalesales.c"
 #include "Puente.c"
 
 int main(int argc, char** argv) {
     struct Auto a;
     a.prioridad = 0;
-    a.direccion = false;
-    struct Direccion p;
-    struct Direccion e;
+    a.direccion = 1;
 /*
-    Oeste o;
+    struct PuntosCardinales p;
+    struct PuntosCardinales e;
+*/
+
     printf("Informacion de auto %d %d", a.prioridad, a.direccion);
+    /*
     FILE *fichero;
     fichero = fopen("data/data.txt", "r");
     char caracter;

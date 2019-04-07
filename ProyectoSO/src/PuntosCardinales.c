@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-struct Direccion
+struct PuntosCardinales
 {
     int direccion; //OE 0 y EO 1
     int k_carros_e ;

@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 
 typedef struct Auto{
     int prioridad;
-    bool direccion;
+    int direccion; //OE 0 y EO 1
 } automovil, patrulla, ambulancia;
