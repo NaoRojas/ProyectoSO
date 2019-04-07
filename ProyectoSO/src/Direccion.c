@@ -3,7 +3,7 @@
 
 struct Direccion
 {
-	bool direccion; //OE 0 y EO 1
+    int direccion; //OE 0 y EO 1
     int k_carros_e ;
     int pro_lle ;
     int tie_sem ;
@@ -13,6 +13,7 @@ struct Direccion
     int k_amb ;
 
 };
+/*
 struct Direccion *Direccion_new( bool direccion, int k_carros_e, int pro_lle, int tie_sem,
 		int vel_min, int vel_max, int k_veh_x_pas, int k_amb) {
     struct example *p = malloc(sizeof *p);
@@ -25,3 +26,4 @@ struct Direccion *Direccion_new( bool direccion, int k_carros_e, int pro_lle, in
    p->k_amb=k_amb;
     return p;
 }
+*/

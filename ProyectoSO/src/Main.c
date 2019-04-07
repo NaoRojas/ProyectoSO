@@ -11,15 +11,15 @@
 #include <string.h>
 #include "Auto.c"
 #include "Direccion.c"
-#include "Este.c"
 #include "Puente.c"
 
 int main(int argc, char** argv) {
-    Auto a;
+    struct Auto a;
     a.prioridad = 0;
     a.direccion = false;
-    Puente p;
-    Este e;
+    struct Direccion p;
+    struct Direccion e;
+/*
     Oeste o;
     printf("Informacion de auto %d %d", a.prioridad, a.direccion);
     FILE *fichero;
@@ -54,6 +54,7 @@ int main(int argc, char** argv) {
     o.vel_max = number[5];
     o.k_veh_x_pas = number[6];
     o.k_amb = number[7];
+*/
 
     return EXIT_SUCCESS;
 }

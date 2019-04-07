@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-typedef struct
-{
+typedef struct Auto{
     int prioridad;
     bool direccion;
-}automovil, patrulla, ambulancia;
+} automovil, patrulla, ambulancia;
