@@ -11,20 +11,15 @@
 #include "Auto.c"
 #include "Puente.c"
 
-int main(int argc, char** argv) {
-    struct Auto a;
-    a.prioridad = 0;
-    a.direccion = 1;
-/*
-    struct PuntosCardinales p;
-    struct PuntosCardinales e;
-*/
+void* Puente_A_Terabithia(){
+    
+}
 
-    printf("Informacion de auto %d %d\n", a.prioridad, a.direccion);
-    /*
+
+int main() {
     FILE *fichero;
     fichero = fopen("data/data.txt", "r");
-    char caracter;
+
     char textoExtraido[60];
     int posicion = 0;
     int number[15];
@@ -54,7 +49,7 @@ int main(int argc, char** argv) {
     o.vel_max = number[5];
     o.k_veh_x_pas = number[6];
     o.k_amb = number[7];
-*/
 
+    Puente_A_Terabithia();
     return EXIT_SUCCESS;
 }
