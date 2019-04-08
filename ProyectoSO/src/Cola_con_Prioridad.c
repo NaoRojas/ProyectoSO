@@ -1,23 +1,26 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <pthread.h>
+#include "Auto.h"
 
-struct Nodo {
-    Rama dato;
-    Nodo* izq;
-    Nodo* der;
-    Nodo() {
-        izq = der = nullptr;
-    }
-};
+struct Cola_con_Prioridad {
+    Auto cola[300];
+    int final;
 
-struct Cola_con_Prioridad{
-    struct Nodo* ppio;
-    Cola_con_Prioridad(){
+    Cola_con_Prioridad() {
         ppio = null;
+        inicio = 0;
+        final = 0;
     }
 };
 
-/*
-void enqui
-*/
+void enQueue(Cola_con_Prioridad* c, Auto a) {
+    if (c->final) {
+        struct Nodo* aux = c->ppio;
+        while (aux->sig) {
+            aux = aux->sig;
+        }
+
+    }
+}
