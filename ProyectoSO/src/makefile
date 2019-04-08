@@ -1,4 +1,4 @@
-ejecular: compilar
+ejecutar: compilar
 	@./proyecto
 compilar: Main
 	
