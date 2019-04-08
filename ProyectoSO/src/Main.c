@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
     struct PuntosCardinales e;
 */
 
-    printf("Informacion de auto %d %d", a.prioridad, a.direccion);
+    printf("Informacion de auto %d %d\n", a.prioridad, a.direccion);
     /*
     FILE *fichero;
     fichero = fopen("data/data.txt", "r");

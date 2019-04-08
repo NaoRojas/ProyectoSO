@@ -1,3 +1,5 @@
+ejecular: compilar
+	./proyecto
 compilar: Main
 	
 Main: Puente.o PuntosCardinales.o Auto.o Main.o
@@ -10,4 +12,6 @@ PuntosCardinales.o: PuntosCardinales.c
 	gcc -c PuntosCardinales.c
 Puente.o: Puente.c PuntosCardinales.c
 	gcc -c Puente.c
+clean:
+	rm -f proyecto *.o
 
