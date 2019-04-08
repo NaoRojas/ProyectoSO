@@ -1,13 +1,13 @@
 compilar: Main
 	
-Main: Main.o Puente.o Direccion.o Auto.o
-	gcc -o proyecto Main.o Puente.o Direccion.o Auto.o
-Main.o: Puente.c Direccion.c Auto.c
-	gcc Main.c -o Main -lpthread
-Auto.o:
-	gcc Auto.c -o Auto
-Direccion.o:
-	gcc Direccion.c -o Direccion
-Puente.o: Direccion.c
-	gcc Puente.c -o Puente
+Main: Puente.o PuntosCardinales.o Auto.o Main.o
+	gcc -o proyecto Main.o Puente.o PuntosCardinales.o Auto.o
+Main.o: Main.c Puente.c PuntosCardinales.c Auto.c
+	gcc -c Main.c -lpthread
+Auto.o: Auto.c
+	gcc -c Auto.c
+PuntosCardinales.o: PuntosCardinales.c
+	gcc -c PuntosCardinales.c
+Puente.o: Puente.c PuntosCardinales.c
+	gcc -c Puente.c
 

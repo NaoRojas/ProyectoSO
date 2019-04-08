@@ -8,9 +8,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <string.h>
 #include "Auto.c"
-#include "PuntosCardinalesales.c"
 #include "Puente.c"
 
 int main(int argc, char** argv) {
