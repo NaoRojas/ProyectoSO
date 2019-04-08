@@ -7,9 +7,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <pthread.h>
 #include "Auto.c"
 #include "Puente.c"
+#define ln(x) log(x)
 
 struct Puente p;
 struct PuntosCardinales o;
@@ -28,17 +30,26 @@ int main() {
 }
 
 void creandoHilos() {
+/*
     int num_pth = 588;
+    int cont = 0;
+    srand(time(NULL));
+    double rand = drand48() * (1.0 + 1.0);
     pthread_t tids[num_pth];
     for (int i = 0; i < num_pth; i++) {
-        
+        struct Auto;
+        if (p.direccion) {
+            Auto.velocidad = 
+        }
         pthread_attr_t attr;
         pthread_attr_init(&attr);
         pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a);
+        
     }
     for (int i = 0; i < num_args; i++) {
         pthread_join(tids[i], NULL);
     }
+*/
 }
 
 void* La_Ladrona_de_Libros() {
@@ -79,6 +90,7 @@ void* La_Ladrona_de_Libros() {
     //Asignando los puntos de entrada
     p.ladoEste = e;
     p.ladoOeste = o;
+    p.direccion = 0;
 
     /*
         printf("Longitud de Puente %d \n"
