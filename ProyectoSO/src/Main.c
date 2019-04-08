@@ -16,8 +16,8 @@ void* Puente_A_Terabithia(){
 }
 
 
-int main() {
-    FILE *fichero;
+void* La_Ladrona_de_Libros(){
+     FILE *fichero;
     fichero = fopen("data/data.txt", "r");
 
     char textoExtraido[60];
@@ -49,7 +49,10 @@ int main() {
     o.vel_max = number[5];
     o.k_veh_x_pas = number[6];
     o.k_amb = number[7];
+}
 
+int main() {
+    La_Ladrona_de_Libros();
     Puente_A_Terabithia();
     return EXIT_SUCCESS;
 }
