@@ -54,12 +54,8 @@ void* La_Ladrona_de_Libros() {
     int number[15];
     if (fichero) {
         fgets(textoExtraido, 60, fichero);
-        for (int i = 0; i < 15; i++) {
+        for (int i = 0; i < 15; i++)
             fscanf(fichero, "%d", &number[i]);
-
-        }
-    } else {
-        printf("NO SIRVO");
         exit(1);
     }
     fclose(fichero);
