@@ -7,49 +7,43 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <pthread.h>
+#include <unistd.h>
 #include "Auto.c"
 #include "Puente.c"
 #define ln(x) log(x)
 
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 struct Puente p;
 struct PuntosCardinales o;
 struct PuntosCardinales e;
 
-void creandoHilos();
-
-void* Puente_A_Terabithia();
-
-void La_Ladrona_de_Libros();
-
-int main() {
-    La_Ladrona_de_Libros();
-    Puente_A_Terabithia();
-    return EXIT_SUCCESS;
+void* Puente_A_Terabithia(void* a) {
+    pthread_mutex_lock(&mutex);
+    struct Auto* aux = (struct Auto*) a;
+    printf("Informacion del auto es nombre %s, %d, %.2f",
+            aux->nombre, aux->prioridad, aux->velocidad);
+    sleep(3);
+    pthread_mutex_unlock(&mutex);
 }
 
 void creandoHilos() {
-/*
-    int num_pth = 588;
-    int cont = 0;
-    srand(time(NULL));
-    double rand = drand48() * (1.0 + 1.0);
+    int num_pth = 10;
+    /*
+        int cont = 0;
+        srand(time(NULL));
+        double rand = drand48() * (1.0 + 1.0);
+     */
     pthread_t tids[num_pth];
     for (int i = 0; i < num_pth; i++) {
-        struct Auto;
-        if (p.direccion) {
-            Auto.velocidad = 
-        }
+        struct Auto* a = (struct Auto*) malloc(sizeof (struct Auto));
         pthread_attr_t attr;
         pthread_attr_init(&attr);
         pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a);
-        
     }
-    for (int i = 0; i < num_args; i++) {
+    for (int i = 0; i < num_pth; i++) {
         pthread_join(tids[i], NULL);
     }
-*/
 }
 
 void* La_Ladrona_de_Libros() {
@@ -116,5 +110,8 @@ void* La_Ladrona_de_Libros() {
      */
 }
 
-void* Puente_A_Terabithia(Auto a) {
+int main() {
+    La_Ladrona_de_Libros();
+    creandoHilos();
+    return EXIT_SUCCESS;
 }
