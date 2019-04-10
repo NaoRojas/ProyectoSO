@@ -28,6 +28,7 @@ void desbloquear() {
 
 void* semaforo(void* arg) {
     while (1) {
+        bloquear();
         if (p.direccion) {
             p.direccion = 0;
             sleep(p.ladoOeste.tie_sem);
@@ -35,6 +36,7 @@ void* semaforo(void* arg) {
             p.direccion = 1;
             sleep(p.ladoEste.tie_sem);
         }
+        desbloquear();
     }
 }
 
@@ -55,9 +57,10 @@ void* Puente_A_Terabithia(void* a) {
     } else {
         //enQueue(&Cola_Este, &a);
     }
-    if(p.direccion){
+    bloquear();
+    if (p.direccion) {
         //aux2 = deQueue(&Cola_Oeste);
-    }else{
+    } else {
         //aux2 = deQueue(&Cola_Eeste);
     }
     //printf("El auto va del Oeste al Este, %s, %d, %.2f\n",
@@ -73,7 +76,7 @@ void* creandoAutosEste(void* arg) {
     srand(time(NULL));
     double randCrear;
     double rand;
-    struct Auto* a[num_pth - 1];
+    struct Auto * a[num_pth - 1];
     pthread_t tids[num_pth - 1];
     for (int i = 0; i < num_pth; i++) {
         a[i] = (struct Auto*) malloc(sizeof (struct Auto));
@@ -106,7 +109,7 @@ void* creandoAutosOeste(void* arg) {
     srand(time(NULL));
     double randCrear;
     double rand;
-    struct Auto* a[num_pth - 1];
+    struct Auto * a[num_pth - 1];
     pthread_t tids[num_pth - 1];
     for (int i = 0; i < num_pth; i++) {
         a[i] = (struct Auto*) malloc(sizeof (struct Auto));
@@ -188,9 +191,24 @@ void La_Ladrona_de_Libros() {
             o.k_carros_e, o.pro_lle, o.tie_sem, o.vel_min, o.vel_max, o.k_veh_x_pas, o.k_amb);
 }
 
+void creandoAutos() {
+    pthread_t tid0;
+    pthread_attr_t attr0;
+    pthread_attr_init(&attr0);
+    pthread_create(&tid0, &attr0, creandoAutosEste, NULL);
+
+    pthread_t tid;
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_create(&tid, &attr, creandoAutosOeste, NULL);
+
+    pthread_join(tid0, NULL);
+    pthread_join(tid, NULL);
+}
+
 int main() {
     encenderSemaforo();
     La_Ladrona_de_Libros();
-    creandoAutosEste();
+    creandoAutos();
     return EXIT_SUCCESS;
 }
