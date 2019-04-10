@@ -17,13 +17,25 @@ struct Puente p;
 struct PuntosCardinales o;
 struct PuntosCardinales e;
 
+void bloquear() {
+    pthread_mutex_lock(&mutex);
+}
+
+void desbloquear() {
+    pthread_mutex_unlock(&mutex);
+}
+
 void* semaforo(void* arg) {
     while (1) {
         if (p.direccion) {
+            bloquear();
             p.direccion = 0;
+            desbloquear();
             sleep(p.ladoOeste.tie_sem);
         } else {
+            bloquear();
             p.direccion = 1;
+            desbloquear();
             sleep(p.ladoEste.tie_sem);
         }
     }
