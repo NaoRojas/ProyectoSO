@@ -50,7 +50,7 @@ void* Puente_A_Terabithia(void* a) {
     free(a);
     struct Auto* aux2;
     double t;
-    if (p.direccion) {
+    if (aux0->direccion) {
         //Aqui va la cola del oeste
         //enQueue(&Cola_Oeste,&a);
         //pthread_mutex_lock(&mutex);
@@ -73,52 +73,64 @@ void* creandoAutosEste(void* arg) {
     int cont = 0;
     srand(time(NULL));
     double randCrear;
+    double rand;
+    struct Auto* a[num_pth - 1];
     pthread_t tids[num_pth - 1];
     for (int i = 0; i < num_pth; i++) {
-        struct Auto* a = (struct Auto*) malloc(sizeof (struct Auto));
+        a[i] = (struct Auto*) malloc(sizeof (struct Auto));
         if (cont == p.ladoEste.k_amb) {
-            a->prioridad = 1;
-            a->nombre = "Ambulancia";
+            a[i]->prioridad = 1;
+            a[i]->nombre = "Ambulancia";
             cont = 0;
         } else {
-            a->prioridad = 2;
-            a->nombre = "Automoviles";
+            a[i]->prioridad = 2;
+            a[i]->nombre = "Automoviles";
             cont++;
         }
-        a->velocidad = (drand48() * 4 + 4);
+        a[i]->velocidad = (drand48() * 4 + 4);
+        a[i]->direccion = 0;
         pthread_attr_t attr;
         pthread_attr_init(&attr);
-        pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a);
-        randCrear = drand48() * 2.0;
-        rand = -p.ladoEste.pro_lle * log(1 - rand);
+        pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a[i]);
+        rand = drand48() * 2.0;
+        randCrear = -p.ladoEste.pro_lle * log(1 - rand);
         sleep(randCrear);
+    }
+    for (int i = 0; i < num_args; i++) {
+        pthread_join(tids[i], NULL);
     }
 }
 
-void creandoAutosOeste() {
-    int num_pth = 300;
+void* creandoAutosOeste(void* arg) {
+    int num_pth = 288;
     int cont = 0;
     srand(time(NULL));
     double randCrear;
+    double rand;
+    struct Auto* a[num_pth - 1];
     pthread_t tids[num_pth - 1];
     for (int i = 0; i < num_pth; i++) {
-        struct Auto* a = (struct Auto*) malloc(sizeof (struct Auto));
+        a[i] = (struct Auto*) malloc(sizeof (struct Auto));
         if (cont == p.ladoOeste.k_amb) {
-            a->prioridad = 1;
-            a->nombre = "Ambulancia";
+            a[i]->prioridad = 1;
+            a[i]->nombre = "Ambulancia";
             cont = 0;
         } else {
-            a->prioridad = 2;
-            a->nombre = "Automoviles";
+            a[i]->prioridad = 2;
+            a[i]->nombre = "Automoviles";
             cont++;
         }
-        a->velocidad = (drand48() * 18 + 12);
+        a[i]->velocidad = (drand48() * 18 + 12);
+        a[i]->direccion = 1;
         pthread_attr_t attr;
         pthread_attr_init(&attr);
-        pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a);
-        randCrear = drand48() * 2.0;
-        rand = -p.ladoOeste.pro_lle * log(1 - rand);
+        pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a[i]);
+        rand = drand48() * 2.0;
+        randCrear = -p.ladoOeste.pro_lle * log(1 - rand);
         sleep(randCrear);
+    }
+    for (int i = 0; i < num_args; i++) {
+        pthread_join(tids[i], NULL);
     }
 }
 
