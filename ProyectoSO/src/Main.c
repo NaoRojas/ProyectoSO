@@ -96,27 +96,29 @@ void* creandoAutosEste(void* arg) {
 }
 
 void creandoAutosOeste() {
-    int num_pth = 588;
+    int num_pth = 300;
     int cont = 0;
     srand(time(NULL));
-    double rand = drand48() * (1.0 + 1.0);
+    double randCrear;
     pthread_t tids[num_pth - 1];
     for (int i = 0; i < num_pth; i++) {
         struct Auto* a = (struct Auto*) malloc(sizeof (struct Auto));
-        if (p.direccion) {
-
-        } else {
-
-        }
-        if (cont == p.ladoEste.k_amb || cont == p.ladoOeste.k_amb) {
+        if (cont == p.ladoOeste.k_amb) {
+            a->prioridad = 1;
             a->nombre = "Ambulancia";
+            cont = 0;
+        } else {
+            a->prioridad = 2;
+            a->nombre = "Automoviles";
+            cont++;
         }
+        a->velocidad = (drand48() * 18 + 12);
         pthread_attr_t attr;
         pthread_attr_init(&attr);
         pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a);
-    }
-    for (int i = 0; i < num_pth; i++) {
-        pthread_join(tids[i], NULL);
+        randCrear = drand48() * 2.0;
+        rand = -p.ladoOeste.pro_lle * log(1 - rand);
+        sleep(randCrear);
     }
 }
 
