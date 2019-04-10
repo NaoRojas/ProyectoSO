@@ -1,4 +1,5 @@
 
+
 struct PuntosCardinales {
     int k_carros_e;
     int pro_lle;

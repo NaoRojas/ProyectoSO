@@ -1,5 +1,4 @@
 
-
 #include "PuntosCardinales.c"
 
 struct Puente {

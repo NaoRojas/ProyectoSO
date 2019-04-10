@@ -1,4 +1,5 @@
 
+
 typedef struct Auto{
     char* nombre;
     int prioridad;

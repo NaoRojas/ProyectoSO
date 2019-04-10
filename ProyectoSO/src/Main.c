@@ -11,7 +11,6 @@
 #include <unistd.h>
 #include "Auto.c"
 #include "Puente.c"
-#define ln(x) log(x)
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 struct Puente p;
@@ -21,7 +20,7 @@ struct PuntosCardinales e;
 void* Puente_A_Terabithia(void* a) {
     pthread_mutex_lock(&mutex);
     struct Auto* aux = (struct Auto*) a;
-    printf("Informacion del auto es nombre %s, %d, %.2f",
+    printf("Informacion del auto es nombre %s, %d, %.2f\n",
             aux->nombre, aux->prioridad, aux->velocidad);
     sleep(3);
     pthread_mutex_unlock(&mutex);
@@ -46,17 +45,15 @@ void creandoHilos() {
     }
 }
 
-void* La_Ladrona_de_Libros() {
+void La_Ladrona_de_Libros() {
     FILE *fichero;
     fichero = fopen("data/data.txt", "r");
-
     char textoExtraido[60];
     int number[15];
     if (fichero) {
         fgets(textoExtraido, 60, fichero);
         for (int i = 0; i < 15; i++)
             fscanf(fichero, "%d", &number[i]);
-        exit(1);
     }
     fclose(fichero);
 
@@ -81,33 +78,33 @@ void* La_Ladrona_de_Libros() {
     p.ladoEste = e;
     p.ladoOeste = o;
     p.direccion = 0;
+/*
+    printf("Longitud de Puente %d \n"
+            "Datos Este  \n"
+            "Cantidad de carros %d \n"
+            "Promedio de llegada %d \n"
+            "Tiempo de semaforo %d  \n"
+            "Velocidad Maxima  %d \n"
+            "Vecidad Minima %d  \n"
+            "Cantidad de vehiculos por paso %d  \n"
+            "Porcentaje de ambulancias %d \n",
+            p.longitud, e.k_carros_e, e.pro_lle, e.tie_sem, e.vel_min, e.vel_max, e.k_veh_x_pas, e.k_amb);
 
-    /*
-        printf("Longitud de Puente %d \n"
-                "Datos Este  \n"
-                "Cantidad de carros %d \n"
-                "Promedio de llegada %d \n"
-                "Tiempo de semaforo %d  \n"
-                "Velocidad Maxima  %d \n"
-                "Vecidad Minima %d  \n"
-                "Cantidad de vehiculos por paso %d  \n"
-                "Porcentaje de ambulancias %d \n",
-                p.longitud, e.k_carros_e, e.pro_lle, e.tie_sem, e.vel_min, e.vel_max, e.k_veh_x_pas, e.k_amb);
-
-        printf("Datos Oeste  \n"
-                "Cantidad de carros %d \n"
-                "Promedio de llegada %d \n"
-                "Tiempo de semaforo %d  \n"
-                "Velocidad Maxima  %d \n"
-                "Vecidad Minima %d  \n"
-                "Cantidad de vehiculos por paso %d  \n"
-                "Porcentaje de ambulancias %d \n",
-                o.k_carros_e, o.pro_lle, o.tie_sem, o.vel_min, o.vel_max, o.k_veh_x_pas, o.k_amb);
-     */
+    printf("Datos Oeste  \n"
+            "Cantidad de carros %d \n"
+            "Promedio de llegada %d \n"
+            "Tiempo de semaforo %d  \n"
+            "Velocidad Maxima  %d \n"
+            "Vecidad Minima %d  \n"
+            "Cantidad de vehiculos por paso %d  \n"
+            "Porcentaje de ambulancias %d \n",
+            o.k_carros_e, o.pro_lle, o.tie_sem, o.vel_min, o.vel_max, o.k_veh_x_pas, o.k_amb);
+*/
 }
 
 int main() {
     La_Ladrona_de_Libros();
     creandoHilos();
+
     return EXIT_SUCCESS;
 }
