@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <pthread.h>
 #include <unistd.h>
+#include <math.h>
 #include "Auto.c"
 #include "Puente.c"
 
@@ -28,14 +29,10 @@ void desbloquear() {
 void* semaforo(void* arg) {
     while (1) {
         if (p.direccion) {
-            bloquear();
             p.direccion = 0;
-            desbloquear();
             sleep(p.ladoOeste.tie_sem);
         } else {
-            bloquear();
             p.direccion = 1;
-            desbloquear();
             sleep(p.ladoEste.tie_sem);
         }
     }
@@ -46,7 +43,6 @@ void encenderSemaforo() {
     pthread_attr_t attr;
     pthread_attr_init(&attr);
     pthread_create(&tid, &attr, semaforo, NULL);
-    pthread_join(tid, NULL);
 }
 
 void* Puente_A_Terabithia(void* a) {
@@ -72,7 +68,26 @@ void* Puente_A_Terabithia(void* a) {
     pthread_mutex_unlock(&mutex);
 }
 
-void creandoHilos() {
+void* creandoAutosEste(void* arg) {
+    int num_pth = 300;
+    int cont = 0;
+    srand(time(NULL));
+    double rand = drand48() * 2.0;
+    for (int i = 0; i < num_pth; i++) {
+        struct Auto* a = (struct Auto*) malloc(sizeof (struct Auto));
+        if (cont == p.ladoEste.k_amb) {
+            a->prioridad = 1;
+            a->nombre = "Ambulancia";
+        }
+        rand = -p.ladoEste.pro_lle * log(1 - rand);
+        sleep(rand);
+    }
+    for (int i = 0; i < num_pth; i++) {
+        pthread_join(tids[i], NULL);
+    }
+}
+
+void creandoAutosOeste() {
     int num_pth = 588;
     int cont = 0;
     srand(time(NULL));
@@ -81,9 +96,12 @@ void creandoHilos() {
     for (int i = 0; i < num_pth; i++) {
         struct Auto* a = (struct Auto*) malloc(sizeof (struct Auto));
         if (p.direccion) {
-            //Aca van los calculos
+
         } else {
 
+        }
+        if (cont == p.ladoEste.k_amb || cont == p.ladoOeste.k_amb) {
+            a->nombre = "Ambulancia";
         }
         pthread_attr_t attr;
         pthread_attr_init(&attr);
@@ -105,7 +123,6 @@ void La_Ladrona_de_Libros() {
             fscanf(fichero, "%d", &number[i]);
     }
     fclose(fichero);
-
     p.longitud = number[0]; //Longitud de puente
     //Datos este
     e.k_carros_e = number[1]; //Cantidad de carros
@@ -115,6 +132,7 @@ void La_Ladrona_de_Libros() {
     e.vel_max = number[5]; //Velocidad Maxima
     e.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
     e.k_amb = number[7]; //Prcentaje de ambulancias
+    e.k_amb = e.k_amb * 100 / 300;
     //Datos Oeste
     o.k_carros_e = number[1]; //Cantidad de carros
     o.pro_lle = number[2]; //Promedio de llegada
@@ -123,37 +141,35 @@ void La_Ladrona_de_Libros() {
     o.vel_max = number[5]; //Velocidad Maxima
     o.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
     o.k_amb = number[7]; //Prcentaje de ambulancias
+    o.k_amb = o.k_amb * 100 / 288;
     //Asignando los puntos de entrada
     p.ladoEste = e;
     p.ladoOeste = o;
     p.direccion = 0;
-    /*
-        printf("Longitud de Puente %d \n"
-                "Datos Este  \n"
-                "Cantidad de carros %d \n"
-                "Promedio de llegada %d \n"
-                "Tiempo de semaforo %d  \n"
-                "Velocidad Maxima  %d \n"
-                "Vecidad Minima %d  \n"
-                "Cantidad de vehiculos por paso %d  \n"
-                "Porcentaje de ambulancias %d \n",
-                p.longitud, e.k_carros_e, e.pro_lle, e.tie_sem, e.vel_min, e.vel_max, e.k_veh_x_pas, e.k_amb);
-
-        printf("Datos Oeste  \n"
-                "Cantidad de carros %d \n"
-                "Promedio de llegada %d \n"
-                "Tiempo de semaforo %d  \n"
-                "Velocidad Maxima  %d \n"
-                "Vecidad Minima %d  \n"
-                "Cantidad de vehiculos por paso %d  \n"
-                "Porcentaje de ambulancias %d \n",
-                o.k_carros_e, o.pro_lle, o.tie_sem, o.vel_min, o.vel_max, o.k_veh_x_pas, o.k_amb);
-     */
+    printf("Longitud de Puente %d \n"
+            "Datos Este  \n"
+            "Cantidad de carros %d \n"
+            "Promedio de llegada %d \n"
+            "Tiempo de semaforo %d  \n"
+            "Velocidad Maxima  %d \n"
+            "Vecidad Minima %d  \n"
+            "Cantidad de vehiculos por paso %d  \n"
+            "Porcentaje de ambulancias %d \n",
+            p.longitud, e.k_carros_e, e.pro_lle, e.tie_sem, e.vel_min, e.vel_max, e.k_veh_x_pas, e.k_amb);
+    printf("Datos Oeste  \n"
+            "Cantidad de carros %d \n"
+            "Promedio de llegada %d \n"
+            "Tiempo de semaforo %d  \n"
+            "Velocidad Maxima  %d \n"
+            "Vecidad Minima %d  \n"
+            "Cantidad de vehiculos por paso %d  \n"
+            "Porcentaje de ambulancias %d \n",
+            o.k_carros_e, o.pro_lle, o.tie_sem, o.vel_min, o.vel_max, o.k_veh_x_pas, o.k_amb);
 }
 
 int main() {
     encenderSemaforo();
     La_Ladrona_de_Libros();
-    creandoHilos();
+    creandoAutosEste();
     return EXIT_SUCCESS;
 }
