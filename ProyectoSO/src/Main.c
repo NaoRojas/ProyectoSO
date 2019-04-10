@@ -51,20 +51,19 @@ void* Puente_A_Terabithia(void* a) {
     struct Auto* aux2;
     double t;
     if (aux0->direccion) {
-        //Aqui va la cola del oeste
         //enQueue(&Cola_Oeste,&a);
-        //pthread_mutex_lock(&mutex);
-        //aux2 = deQueue(&Cola_Oeste);
     } else {
-        //Aqui va la cola del Este
         //enQueue(&Cola_Este, &a);
-        //pthread_mutex_lock(&mutex);
-        //aux2 = deQueue(&Cola_Este);
+    }
+    if(p.direccion){
+        //aux2 = deQueue(&Cola_Oeste);
+    }else{
+        //aux2 = deQueue(&Cola_Eeste);
     }
     //printf("El auto va del Oeste al Este, %s, %d, %.2f\n",
     //        aux2->nombre, aux2->prioridad, aux2->velocidad);
     //t = p.longitud / aux2->velocidad;
-    //sleep(aux2->velocidad);
+    //sleep(t);
     desbloquear();
 }
 
