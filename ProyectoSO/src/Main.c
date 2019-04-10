@@ -46,44 +46,52 @@ void encenderSemaforo() {
 }
 
 void* Puente_A_Terabithia(void* a) {
-    struct Auto* aux = (struct Auto*) a;
+    struct Auto* aux0 = (struct Auto*) a;
+    free(a);
     struct Auto* aux2;
+    double t;
     if (p.direccion) {
         //Aqui va la cola del oeste
         //enQueue(&Cola_Oeste,&a);
         //pthread_mutex_lock(&mutex);
         //aux2 = deQueue(&Cola_Oeste);
-        //printf("El auto va del Oeste al Este, %s, %d, %.2f\n",
-        //        aux2->nombre, aux2->prioridad, aux2->velocidad);
-        //sleep(aux2->velocidad);
     } else {
         //Aqui va la cola del Este
         //enQueue(&Cola_Este, &a);
         //pthread_mutex_lock(&mutex);
         //aux2 = deQueue(&Cola_Este);
-        //printf("El auto va del Oeste al Este, %s, %d, %.2f\n",
-        //        aux2->nombre, aux2->prioridad, aux2->velocidad);
-        //sleep(aux2->velocidad);
     }
-    pthread_mutex_unlock(&mutex);
+    //printf("El auto va del Oeste al Este, %s, %d, %.2f\n",
+    //        aux2->nombre, aux2->prioridad, aux2->velocidad);
+    //t = p.longitud / aux2->velocidad;
+    //sleep(aux2->velocidad);
+    desbloquear();
 }
 
 void* creandoAutosEste(void* arg) {
     int num_pth = 300;
     int cont = 0;
     srand(time(NULL));
-    double rand = drand48() * 2.0;
+    double randCrear;
+    pthread_t tids[num_pth - 1];
     for (int i = 0; i < num_pth; i++) {
         struct Auto* a = (struct Auto*) malloc(sizeof (struct Auto));
         if (cont == p.ladoEste.k_amb) {
             a->prioridad = 1;
             a->nombre = "Ambulancia";
+            cont = 0;
+        } else {
+            a->prioridad = 2;
+            a->nombre = "Automoviles";
+            cont++;
         }
+        a->velocidad = (drand48() * 4 + 4);
+        pthread_attr_t attr;
+        pthread_attr_init(&attr);
+        pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a);
+        randCrear = drand48() * 2.0;
         rand = -p.ladoEste.pro_lle * log(1 - rand);
-        sleep(rand);
-    }
-    for (int i = 0; i < num_pth; i++) {
-        pthread_join(tids[i], NULL);
+        sleep(randCrear);
     }
 }
 
