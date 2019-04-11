@@ -9,7 +9,7 @@ struct Nodo {
     Auto* ptrObj;
 };
 
-struct Lista {
+struct Cola {
     struct Nodo* ppio;
 
     void enQueue(struct Auto* a) {
@@ -45,5 +45,15 @@ struct Lista {
             free(eliminar);
         }
         return aux;
+    }
+
+    void toString() {
+        struct Nodo* actual = ppio;
+        while (actual) {
+            printf("%s, %d, %.2f\n",
+                    actual->ptrObj->nombre, actual->ptrObj->prioridad, actual->ptrObj->velocidad);
+            actual = actual->sig;
+        }
+        return r.str();
     }
 };
