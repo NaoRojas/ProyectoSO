@@ -12,7 +12,7 @@
 #include <math.h>
 #include "Auto.c"
 #include "Puente.c"
-#include "Cola_con_Prioridad.c"
+#include "Cola.c"
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 struct Puente p;
