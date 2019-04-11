@@ -136,8 +136,13 @@ void* Puente_A_Terabithia(void* arg) {
         }
         if (aux2) {
             fflush(stdout);
-            printf("El auto esta cruzando el puente: %s, %d, %2.f\n",
-                    aux2->nombre, aux2->prioridad, aux2->velocidad);
+            if (aux2->direccion) {
+                printf("Esta cruzando desde el Este: %s, %d, %2.f\n",
+                        aux2->nombre, aux2->prioridad, aux2->velocidad);
+            } else {
+                printf("Esta cruzando desde el Oeste: %s, %d, %2.f\n",
+                        aux2->nombre, aux2->prioridad, aux2->velocidad);
+            }
             t = PUENTE.longitud / aux2->velocidad;
             sleep(t);
         } else {
@@ -196,7 +201,7 @@ void* creandoAutosEste(void* arg) {
             cont++;
         }
         a->velocidad = (drand48() * 4 + 4);
-        a->direccion = 0;
+        a->direccion = 1;
         enQueue(a, colita);
         rand = drand48() * 2.0;
         randCrear = -pro_lle * log(1 - rand);
