@@ -12,6 +12,7 @@
 #include <math.h>
 #include "Auto.c"
 #include "Puente.c"
+#include "Cola_con_Prioridad.c"
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 struct Puente p;
@@ -207,8 +208,48 @@ void creandoAutos() {
 }
 
 int main() {
-    encenderSemaforo();
-    La_Ladrona_de_Libros();
-    creandoAutos();
+    /*
+        encenderSemaforo();
+        La_Ladrona_de_Libros();
+        creandoAutos();
+     */
+    struct Auto * a1;
+    a1->nombre = "Auto 1";
+    a1->prioridad = 2;
+    a1->velocidad = 2;
+    struct Auto * a2;
+    a2->nombre = "Auto 2";
+    a2->prioridad = 1;
+    a2->velocidad = 2;
+    struct Auto * a3;
+    a3->nombre = "Auto 3";
+    a3->prioridad = 1;
+    a3->velocidad = 2;
+    struct Auto * a4;
+    a4->nombre = "Auto 4";
+    a4->prioridad = 1;
+    a4->velocidad = 2;
+    struct Auto * a5;
+    a5->nombre = "Auto 5";
+    a5->prioridad = 1;
+    a5->velocidad = 2;
+    struct Auto * a6;
+    a6->nombre = "Auto 6";
+    a6->prioridad = 1;
+    a6->velocidad = 2;
+    struct Auto * a7;
+    a7->nombre = "Auto 7";
+    a7->prioridad = 1;
+    a7->velocidad = 2;
+    struct Lista* cont;
+    cont->ppio = NULL;
+    cont->enQueue(a1);
+    cont->enQueue(a2);
+    cont->enQueue(a3);
+    cont->enQueue(a4);
+    cont->enQueue(a5);
+    cont->enQueue(a6);
+    cont->enQueue(a7);
+    cont->toString();
     return EXIT_SUCCESS;
 }
