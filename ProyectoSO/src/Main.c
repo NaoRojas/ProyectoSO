@@ -14,9 +14,15 @@
 #include "Cola.c"
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-struct Puente p;
-struct PuntosCardinales o;
-struct PuntosCardinales e;
+struct Puente PUENTE;
+struct PuntosCardinales OESTE;
+struct PuntosCardinales ESTE;
+struct Cola COLA_OESTE;
+struct Cola COLA_ESTE;
+
+void enQueue(struct Auto* a, struct Cola* c);
+
+struct Auto* deQueue(struct Cola* c);
 
 void bloquear() {
     pthread_mutex_lock(&mutex);
@@ -26,82 +32,33 @@ void desbloquear() {
     pthread_mutex_unlock(&mutex);
 }
 
-void* semaforo(void* arg) {
-    while (1) {
-        bloquear();
-        if (p.direccion) {
-            p.direccion = 0;
-            sleep(p.ladoOeste.tie_sem);
-        } else {
-            p.direccion = 1;
-            sleep(p.ladoEste.tie_sem);
-        }
-        desbloquear();
-    }
-}
+void* semaforo(void* arg);
 
-void encenderSemaforo() {
-    pthread_t tid;
-    pthread_attr_t attr;
-    pthread_attr_init(&attr);
-    pthread_create(&tid, &attr, semaforo, NULL);
-}
+void encenderSemaforo();
 
 void* Puente_A_Terabithia(void* a) {
     struct Auto* aux0 = (struct Auto*) a;
-    free(a);
-    struct Auto* aux2;
+    struct Auto* aux2 = (struct Auto*) malloc(sizeof (struct Auto));
     double t;
     if (aux0->direccion) {
-        //enQueue(&Cola_Oeste,&a);
+        enQueue(aux0, &COLA_OESTE);
     } else {
-        //enQueue(&Cola_Este, &a);
+        enQueue(aux0, &COLA_ESTE);
     }
     bloquear();
-    if (p.direccion) {
-        //aux2 = deQueue(&Cola_Oeste);
+    if (PUENTE.direccion) {
+        aux2 = deQueue(&COLA_OESTE);
     } else {
-        //aux2 = deQueue(&Cola_Eeste);
+        aux2 = deQueue(&COLA_ESTE);
     }
-    //printf("El auto va del Oeste al Este, %s, %d, %.2f\n",
-    //        aux2->nombre, aux2->prioridad, aux2->velocidad);
-    //t = p.longitud / aux2->velocidad;
-    //sleep(t);
+    printf("El auto va del Oeste al Este, %s, %d, %f\n",
+            aux2->nombre, aux2->prioridad, aux2->velocidad);
+    t = PUENTE.longitud / aux2->velocidad;
+    sleep(t);
     desbloquear();
 }
 
-void* creandoAutosEste(void* arg) {
-    int num_pth = 300;
-    int cont = 0;
-    srand(time(NULL));
-    double randCrear;
-    double rand;
-    struct Auto * a[num_pth - 1];
-    pthread_t tids[num_pth - 1];
-    for (int i = 0; i < num_pth; i++) {
-        a[i] = (struct Auto*) malloc(sizeof (struct Auto));
-        if (cont == p.ladoEste.k_amb) {
-            a[i]->prioridad = 1;
-            a[i]->nombre = "Ambulancia";
-            cont = 0;
-        } else {
-            a[i]->prioridad = 2;
-            a[i]->nombre = "Automoviles";
-            cont++;
-        }
-        a[i]->velocidad = (drand48() * 4 + 4);
-        a[i]->direccion = 0;
-        pthread_attr_t attr;
-        pthread_attr_init(&attr);
-        pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a[i]);
-        rand = drand48() * 2.0;
-        randCrear = -p.ladoEste.pro_lle * log(1 - rand);
-        sleep(randCrear);
-    }
-    for (int i = 0; i < num_args; i++) {
-        pthread_join(tids[i], NULL);
-    }
-}
+void* creandoAutosEste(void* arg);
 
 void* creandoAutosOeste(void* arg) {
     int num_pth = 288;
@@ -113,7 +70,7 @@ void* creandoAutosOeste(void* arg) {
     pthread_t tids[num_pth - 1];
     for (int i = 0; i < num_pth; i++) {
         a[i] = (struct Auto*) malloc(sizeof (struct Auto));
-        if (cont == p.ladoOeste.k_amb) {
+        if (cont == PUENTE.ladoOeste.k_amb) {
             a[i]->prioridad = 1;
             a[i]->nombre = "Ambulancia";
             cont = 0;
@@ -128,10 +85,143 @@ void* creandoAutosOeste(void* arg) {
         pthread_attr_init(&attr);
         pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a[i]);
         rand = drand48() * 2.0;
-        randCrear = -p.ladoOeste.pro_lle * log(1 - rand);
+        randCrear = -PUENTE.ladoOeste.pro_lle * log(1 - rand);
         sleep(randCrear);
     }
-    for (int i = 0; i < num_args; i++) {
+    for (int i = 0; i < num_pth; i++) {
+        pthread_join(tids[i], NULL);
+    }
+}
+
+void La_Ladrona_de_Libros();
+
+void creandoAutos();
+
+void toString(struct Cola* c);
+
+int main() {
+    La_Ladrona_de_Libros();
+
+    pthread_t tid0;
+    pthread_attr_t attr0;
+    pthread_attr_init(&attr0);
+    pthread_create(&tid0, &attr0, creandoAutosEste, NULL);
+
+/*
+    pthread_t tid;
+    pthread_attr_t attr;
+    pthread_attr_init(&attr);
+    pthread_create(&tid, &attr, creandoAutosOeste, NULL);
+
+    pthread_t tid2;
+    pthread_attr_t attr2;
+    pthread_attr_init(&attr2);
+    pthread_create(&tid2, &attr2, semaforo, NULL);
+*/
+
+    pthread_join(tid0, NULL);
+/*
+    pthread_join(tid, NULL);
+    pthread_join(tid2, NULL);
+*/
+
+    return EXIT_SUCCESS;
+}
+
+void toString(struct Cola* c) {
+    struct Nodo* actual = c->ppio;
+    while (actual) {
+        printf("%s, %d, %.2f\n",
+                actual->ptrObj->nombre, actual->ptrObj->prioridad, actual->ptrObj->velocidad);
+        actual = actual->sig;
+    }
+    printf("------------------------------------------------------------\n");
+}
+
+struct Auto* deQueue(struct Cola* c) {
+    struct Nodo* eliminar;
+    struct Auto* aux = NULL;
+    if (c->ppio) {
+        aux = c->ppio->ptrObj;
+        eliminar = c->ppio;
+        c->ppio = c->ppio->sig;
+        free(eliminar);
+    }
+    return aux;
+}
+
+void enQueue(struct Auto* a, struct Cola* c) {
+    struct Nodo* nuevo = (struct Nodo*) malloc(sizeof (struct Nodo));
+    nuevo->ptrObj = a;
+    if (!c->ppio) {
+        nuevo->sig = c->ppio;
+        c->ppio = nuevo;
+    } else {
+        if (c->ppio->ptrObj->prioridad >= a->prioridad) {
+            nuevo->sig = c->ppio;
+            c->ppio = nuevo;
+        } else {
+            struct Nodo* actual = c->ppio;
+            while (actual->sig) {
+                if (actual->sig->ptrObj->prioridad >= a->prioridad)
+                    break;
+                actual = actual->sig;
+            }
+            nuevo->sig = actual->sig;
+            actual->sig = nuevo;
+        }
+    }
+}
+
+void creandoAutos() {
+    printf("creandoAutos");
+    pthread_t tid0;
+    pthread_attr_t attr0;
+    pthread_attr_init(&attr0);
+    pthread_create(&tid0, &attr0, creandoAutosEste, NULL);
+
+    /*
+        pthread_t tid;
+        pthread_attr_t attr;
+        pthread_attr_init(&attr);
+        pthread_create(&tid, &attr, creandoAutosOeste, NULL);
+     */
+
+    pthread_join(tid0, NULL);
+    /*
+        pthread_join(tid, NULL);
+     */
+}
+
+void* creandoAutosEste(void* arg) {
+    int num_pth = 300;
+    int cont = 0;
+    srand(time(NULL));
+    double randCrear;
+    double rand;
+    struct Auto * a[num_pth - 1];
+    pthread_t tids[num_pth - 1];
+    for (int i = 0; i < num_pth; i++) {
+        a[i] = (struct Auto*) malloc(sizeof (struct Auto));
+        if (cont == PUENTE.ladoEste.k_amb) {
+            a[i]->prioridad = 1;
+            a[i]->nombre = "Ambulancia";
+            cont = 0;
+        } else {
+            a[i]->prioridad = 2;
+            a[i]->nombre = "Automoviles";
+            cont++;
+        }
+        a[i]->velocidad = (drand48() * 4 + 4);
+        a[i]->direccion = 0;
+        pthread_attr_t attr;
+        pthread_attr_init(&attr);
+        pthread_create(&tids[i], &attr, Puente_A_Terabithia, &a[i]);
+        rand = drand48() * 2.0;
+        randCrear = -PUENTE.ladoEste.pro_lle * log(1 - rand);
+        sleep(randCrear);
+    }
+    for (int i = 0; i < num_pth; i++) {
         pthread_join(tids[i], NULL);
     }
 }
@@ -147,110 +237,49 @@ void La_Ladrona_de_Libros() {
             fscanf(fichero, "%d", &number[i]);
     }
     fclose(fichero);
-    p.longitud = number[0]; //Longitud de puente
+    PUENTE.longitud = number[0]; //Longitud de puente
     //Datos este
-    e.k_carros_e = number[1]; //Cantidad de carros
-    e.pro_lle = number[2]; //Promedio de llegada
-    e.tie_sem = number[3]; //Tiempo de Semaforo
-    e.vel_min = number[4]; //Velocidad Minima
-    e.vel_max = number[5]; //Velocidad Maxima
-    e.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
-    e.k_amb = number[7]; //Prcentaje de ambulancias
-    e.k_amb = e.k_amb * 100 / 300;
+    ESTE.k_carros_e = number[1]; //Cantidad de carros
+    ESTE.pro_lle = number[2]; //Promedio de llegada
+    ESTE.tie_sem = number[3]; //Tiempo de Semaforo
+    ESTE.vel_min = number[4]; //Velocidad Minima
+    ESTE.vel_max = number[5]; //Velocidad Maxima
+    ESTE.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
+    ESTE.k_amb = number[7]; //Prcentaje de ambulancias
+    ESTE.k_amb = ESTE.k_amb * 100 / 300;
     //Datos Oeste
-    o.k_carros_e = number[1]; //Cantidad de carros
-    o.pro_lle = number[2]; //Promedio de llegada
-    o.tie_sem = number[3]; //Tiempo de Semaforo
-    o.vel_min = number[4]; //Velocidad Minima
-    o.vel_max = number[5]; //Velocidad Maxima
-    o.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
-    o.k_amb = number[7]; //Prcentaje de ambulancias
-    o.k_amb = o.k_amb * 100 / 288;
+    OESTE.k_carros_e = number[1]; //Cantidad de carros
+    OESTE.pro_lle = number[2]; //Promedio de llegada
+    OESTE.tie_sem = number[3]; //Tiempo de Semaforo
+    OESTE.vel_min = number[4]; //Velocidad Minima
+    OESTE.vel_max = number[5]; //Velocidad Maxima
+    OESTE.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
+    OESTE.k_amb = number[7]; //Prcentaje de ambulancias
+    OESTE.k_amb = OESTE.k_amb * 100 / 288;
     //Asignando los puntos de entrada
-    p.ladoEste = e;
-    p.ladoOeste = o;
-    p.direccion = 0;
-    printf("Longitud de Puente %d \n"
-            "Datos Este  \n"
-            "Cantidad de carros %d \n"
-            "Promedio de llegada %d \n"
-            "Tiempo de semaforo %d  \n"
-            "Velocidad Maxima  %d \n"
-            "Vecidad Minima %d  \n"
-            "Cantidad de vehiculos por paso %d  \n"
-            "Porcentaje de ambulancias %d \n",
-            p.longitud, e.k_carros_e, e.pro_lle, e.tie_sem, e.vel_min, e.vel_max, e.k_veh_x_pas, e.k_amb);
-    printf("Datos Oeste  \n"
-            "Cantidad de carros %d \n"
-            "Promedio de llegada %d \n"
-            "Tiempo de semaforo %d  \n"
-            "Velocidad Maxima  %d \n"
-            "Vecidad Minima %d  \n"
-            "Cantidad de vehiculos por paso %d  \n"
-            "Porcentaje de ambulancias %d \n",
-            o.k_carros_e, o.pro_lle, o.tie_sem, o.vel_min, o.vel_max, o.k_veh_x_pas, o.k_amb);
+    PUENTE.ladoEste = ESTE;
+    PUENTE.ladoOeste = OESTE;
+    PUENTE.direccion = 0;
 }
 
-void creandoAutos() {
-    pthread_t tid0;
-    pthread_attr_t attr0;
-    pthread_attr_init(&attr0);
-    pthread_create(&tid0, &attr0, creandoAutosEste, NULL);
+void* semaforo(void* arg) {
+    while (1) {
+        bloquear();
+        if (PUENTE.direccion) {
+            PUENTE.direccion = 0;
+            sleep(PUENTE.ladoOeste.tie_sem);
+        } else {
+            PUENTE.direccion = 1;
+            sleep(PUENTE.ladoEste.tie_sem);
+        }
+        desbloquear();
+    }
+}
 
+void encenderSemaforo() {
     pthread_t tid;
     pthread_attr_t attr;
     pthread_attr_init(&attr);
-    pthread_create(&tid, &attr, creandoAutosOeste, NULL);
-
-    pthread_join(tid0, NULL);
+    pthread_create(&tid, &attr, semaforo, NULL);
     pthread_join(tid, NULL);
-}
-
-int main() {
-    /*
-        encenderSemaforo();
-        La_Ladrona_de_Libros();
-        creandoAutos();
-     */
-    struct Auto * a1;
-    a1->nombre = "Auto 1";
-    a1->prioridad = 2;
-    a1->velocidad = 2;
-    struct Auto * a2;
-    a2->nombre = "Auto 2";
-    a2->prioridad = 1;
-    a2->velocidad = 2;
-    struct Auto * a3;
-    a3->nombre = "Auto 3";
-    a3->prioridad = 1;
-    a3->velocidad = 2;
-    struct Auto * a4;
-    a4->nombre = "Auto 4";
-    a4->prioridad = 1;
-    a4->velocidad = 2;
-    struct Auto * a5;
-    a5->nombre = "Auto 5";
-    a5->prioridad = 1;
-    a5->velocidad = 2;
-    struct Auto * a6;
-    a6->nombre = "Auto 6";
-    a6->prioridad = 1;
-    a6->velocidad = 2;
-    struct Auto * a7;
-    a7->nombre = "Auto 7";
-    a7->prioridad = 1;
-    a7->velocidad = 2;
-/*
-    struct Lista* cont;
-    cont->ppio = NULL;
-    cont->enQueue(a1);
-    cont->enQueue(a2);
-    cont->enQueue(a3);
-    cont->enQueue(a4);
-    cont->enQueue(a5);
-    cont->enQueue(a6);
-    cont->enQueue(a7);
-    cont->toString();
-*/
-    return EXIT_SUCCESS;
 }
