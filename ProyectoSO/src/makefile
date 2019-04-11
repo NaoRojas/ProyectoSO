@@ -21,4 +21,3 @@ Cola.o: Cola.c Auto.c
 
 clean:
 	@rm -f Proyecto *.o
-
