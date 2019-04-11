@@ -147,7 +147,7 @@ void* Puente_A_Terabithia(void* arg) {
 }
 
 void* creandoAutosOeste(void* arg) {
-    int num_pth = 288;
+    int num_pth = OESTE.k_carros_e;
     int cont = 0;
     double randCrear;
     double rand;
@@ -169,9 +169,6 @@ void* creandoAutosOeste(void* arg) {
         }
         a->velocidad = (drand48() * 18 + 12);
         a->direccion = 0;
-        fflush(stdout);
-        printf("LLegando auto desde el Oeste: %s, %d, %2.f\n",
-                a->nombre, a->prioridad, a->velocidad);
         enQueue(a, colita);
         rand = drand48() * 2.0;
         randCrear = -pro_lle * log(1 - rand);
@@ -180,7 +177,7 @@ void* creandoAutosOeste(void* arg) {
 }
 
 void* creandoAutosEste(void* arg) {
-    int num_pth = 300;
+    int num_pth = ESTE.k_carros_e;
     int cont = 0;
     double randCrear;
     double rand;
@@ -200,9 +197,6 @@ void* creandoAutosEste(void* arg) {
         }
         a->velocidad = (drand48() * 4 + 4);
         a->direccion = 0;
-        fflush(stdout);
-        printf("LLegando auto desde el Este: %s, %d, %2.f\n",
-                a->nombre, a->prioridad, a->velocidad);
         enQueue(a, colita);
         rand = drand48() * 2.0;
         randCrear = -pro_lle * log(1 - rand);
@@ -231,8 +225,7 @@ void La_Ladrona_de_Libros() {
     ESTE.vel_max = number[5]; //Velocidad Maxima
     ESTE.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
     ESTE.k_amb = number[7]; //Prcentaje de ambulancias
-    //ESTE.k_amb = ESTE.k_amb * 100 / 300;
-    ESTE.k_amb = 14;
+    ESTE.k_amb = (ESTE.k_amb * 300) / 100;
     //Datos Oeste
     OESTE.k_carros_e = number[1]; //Cantidad de carros
     OESTE.pro_lle = number[2]; //Promedio de llegada
@@ -241,8 +234,8 @@ void La_Ladrona_de_Libros() {
     OESTE.vel_max = number[5]; //Velocidad Maxima
     OESTE.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
     OESTE.k_amb = number[7]; //Prcentaje de ambulancias
-    //OESTE.k_amb = OESTE.k_amb * 100 / 288;
-    OESTE.k_amb = 14;
+    OESTE.k_amb = (ESTE.k_amb * 288) / 100;
+
     COLA_OESTE.ppio = NULL;
     COLA_ESTE.ppio = NULL;
 }
