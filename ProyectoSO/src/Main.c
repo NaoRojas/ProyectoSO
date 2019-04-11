@@ -14,11 +14,11 @@
 #include "Cola.c"
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-static struct Puente PUENTE;
-static struct PuntosCardinales OESTE;
-static struct PuntosCardinales ESTE;
-static struct Cola COLA_OESTE;
-static struct Cola COLA_ESTE;
+struct Puente PUENTE;
+struct PuntosCardinales OESTE;
+struct PuntosCardinales ESTE;
+struct Cola COLA_OESTE;
+struct Cola COLA_ESTE;
 
 void enQueue(struct Auto* a, struct Cola* c);
 
@@ -40,41 +40,37 @@ void La_Ladrona_de_Libros();
 
 void toString(struct Cola* c);
 
-int main() {
+int main(int arg, char const * argv[]) {
 
     srand(time(NULL));
     La_Ladrona_de_Libros();
 
-    pthread_t tid0;
-    pthread_attr_t attr0;
-    pthread_attr_init(&attr0);
-    pthread_create(&tid0, &attr0, creandoAutosEste, NULL);
-
-/*
     pthread_t tid;
     pthread_attr_t attr;
     pthread_attr_init(&attr);
-    pthread_create(&tid, &attr, Puente_A_Terabithia, NULL);
-*/
+    pthread_create(&tid, &attr, &Puente_A_Terabithia, NULL);
 
-    /*
-        pthread_t tid;
-        pthread_attr_t attr;
-        pthread_attr_init(&attr);
-        pthread_create(&tid, &attr, creandoAutosOeste, NULL);
+    pthread_t tid2;
+    pthread_attr_t attr2;
+    pthread_attr_init(&attr2);
+    pthread_create(&tid2, &attr2, &semaforo, NULL);
 
-        pthread_t tid2;
-        pthread_attr_t attr2;
-        pthread_attr_init(&attr2);
-        pthread_create(&tid2, &attr2, semaforo, NULL);
-     */
+    pthread_t tid3;
+    pthread_attr_t attr3;
+    pthread_attr_init(&attr3);
+    pthread_create(&tid3, &attr3, &creandoAutosEste, NULL);
 
-    pthread_join(tid0, NULL);
-/*
+    pthread_t tid4;
+    pthread_attr_t attr4;
+    pthread_attr_init(&attr4);
+    pthread_create(&tid4, &attr4, &creandoAutosOeste, NULL);
+
     pthread_join(tid, NULL);
-*/
+    pthread_join(tid2, NULL);
+    pthread_join(tid3, NULL);
+    pthread_join(tid4, NULL);
 
-    return EXIT_SUCCESS;
+    return 0;
 }
 
 void toString(struct Cola* c) {
@@ -91,14 +87,12 @@ struct Auto* deQueue(struct Cola* c) {
     struct Nodo* eliminar;
     struct Auto* aux = NULL;
     pthread_mutex_lock(&mutex);
-    struct Nodo* ppio = c->ppio;
-    pthread_mutex_unlock(&mutex);
-    if (ppio) {
+    if (c->ppio) {
         aux = c->ppio->ptrObj;
         eliminar = c->ppio;
         c->ppio = c->ppio->sig;
-        free(eliminar);
     }
+    pthread_mutex_unlock(&mutex);
     return aux;
 }
 
@@ -106,17 +100,15 @@ void enQueue(struct Auto* a, struct Cola* c) {
     struct Nodo* nuevo = (struct Nodo*) malloc(sizeof (struct Nodo));
     nuevo->ptrObj = a;
     pthread_mutex_lock(&mutex);
-    struct Nodo* ppio = c->ppio;
-    pthread_mutex_unlock(&mutex);
-    if (!ppio) {
-        nuevo->sig = ppio;
-        ppio = nuevo;
+    if (!c->ppio) {
+        nuevo->sig = c->ppio;
+        c->ppio = nuevo;
     } else {
-        if (ppio->ptrObj->prioridad >= a->prioridad) {
-            nuevo->sig = ppio;
-            ppio = nuevo;
+        if (c->ppio->ptrObj->prioridad >= a->prioridad) {
+            nuevo->sig = c->ppio;
+            c->ppio = nuevo;
         } else {
-            struct Nodo* actual = ppio;
+            struct Nodo* actual = c->ppio;
             while (actual->sig) {
                 if (actual->sig->ptrObj->prioridad >= a->prioridad)
                     break;
@@ -126,28 +118,30 @@ void enQueue(struct Auto* a, struct Cola* c) {
             actual->sig = nuevo;
         }
     }
+    pthread_mutex_unlock(&mutex);
 }
 
 void* Puente_A_Terabithia(void* arg) {
-    struct Auto* aux2;
+    struct Auto* aux2 = (struct Auto*) malloc(sizeof (struct Auto*));
     double t;
     int d;
+    struct Cola* colitaE = &COLA_ESTE;
+    struct Cola* colitaO = &COLA_OESTE;
     while (1) {
-        pthread_mutex_lock(&mutex);
         d = PUENTE.direccion;
-        pthread_mutex_unlock(&mutex);
         if (d) {
-            aux2 = deQueue(&COLA_OESTE);
+            aux2 = deQueue(colitaE);
         } else {
-            aux2 = deQueue(&COLA_ESTE);
+            aux2 = deQueue(colitaO);
         }
-        if (!aux2) {
-            printf("%s, %d, %f\n",
+        if (aux2) {
+            fflush(stdout);
+            printf("El auto esta cruzando el puente: %s, %d, %2.f\n",
                     aux2->nombre, aux2->prioridad, aux2->velocidad);
             t = PUENTE.longitud / aux2->velocidad;
             sleep(t);
         } else {
-            printf("El Puente esta vacio\n");
+            sleep(2);
         }
     }
 }
@@ -175,6 +169,9 @@ void* creandoAutosOeste(void* arg) {
         }
         a->velocidad = (drand48() * 18 + 12);
         a->direccion = 0;
+        fflush(stdout);
+        printf("LLegando auto desde el Oeste: %s, %d, %2.f\n",
+                a->nombre, a->prioridad, a->velocidad);
         enQueue(a, colita);
         rand = drand48() * 2.0;
         randCrear = -pro_lle * log(1 - rand);
@@ -187,11 +184,9 @@ void* creandoAutosEste(void* arg) {
     int cont = 0;
     double randCrear;
     double rand;
-    pthread_mutex_lock(&mutex);
     struct Cola* colita = &COLA_ESTE;
     int k_amb = ESTE.k_amb;
     int pro_lle = ESTE.pro_lle;
-    pthread_mutex_unlock(&mutex);
     for (int i = 0; i < num_pth; i++) {
         struct Auto * a = (struct Auto*) malloc(sizeof (struct Auto));
         if (cont == k_amb) {
@@ -205,6 +200,9 @@ void* creandoAutosEste(void* arg) {
         }
         a->velocidad = (drand48() * 4 + 4);
         a->direccion = 0;
+        fflush(stdout);
+        printf("LLegando auto desde el Este: %s, %d, %2.f\n",
+                a->nombre, a->prioridad, a->velocidad);
         enQueue(a, colita);
         rand = drand48() * 2.0;
         randCrear = -pro_lle * log(1 - rand);
@@ -224,7 +222,7 @@ void La_Ladrona_de_Libros() {
     }
     fclose(fichero);
     PUENTE.longitud = number[0]; //Longitud de puente
-    PUENTE.direccion = 0;
+    PUENTE.direccion = 1;
     //Datos este
     ESTE.k_carros_e = number[1]; //Cantidad de carros
     ESTE.pro_lle = number[2]; //Promedio de llegada
@@ -250,18 +248,16 @@ void La_Ladrona_de_Libros() {
 }
 
 void* semaforo(void* arg) {
-    pthread_mutex_lock(&mutex);
-    int tie_semE = ESTE.k_amb;
+    int tie_semE = ESTE.pro_lle;
     int tie_semO = OESTE.pro_lle;
-    pthread_mutex_unlock(&mutex);
     while (1) {
-        pthread_mutex_lock(&mutex);
+        fflush(stdout);
+        printf("Cambio de semaforo: Oeste -> Este\n");
         PUENTE.direccion = 0;
-        pthread_mutex_unlock(&mutex);
-        sleep(tie_semE);
-        pthread_mutex_lock(&mutex);
-        PUENTE.direccion = 1;
-        pthread_mutex_unlock(&mutex);
         sleep(tie_semO);
+        fflush(stdout);
+        printf("Cambio de semaforo: Este -> Oeste\n");
+        PUENTE.direccion = 1;
+        sleep(tie_semE);
     }
 }
