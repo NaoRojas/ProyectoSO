@@ -10,7 +10,6 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <math.h>
-#include "Auto.c"
 #include "Puente.c"
 #include "Cola.c"
 
@@ -241,6 +240,7 @@ int main() {
     a7->nombre = "Auto 7";
     a7->prioridad = 1;
     a7->velocidad = 2;
+/*
     struct Lista* cont;
     cont->ppio = NULL;
     cont->enQueue(a1);
@@ -251,5 +251,6 @@ int main() {
     cont->enQueue(a6);
     cont->enQueue(a7);
     cont->toString();
+*/
     return EXIT_SUCCESS;
 }
