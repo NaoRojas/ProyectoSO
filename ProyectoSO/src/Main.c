@@ -165,6 +165,7 @@ void* creandoAutosOeste(void* arg) {
         struct Auto * a = (struct Auto*) malloc(sizeof (struct Auto));
         if (cont == k_amb) {
             a->prioridad = 1;
+            printf("Esta llegando una ambulancia desde el Oeste\n");
             a->nombre = "Ambulancia";
             cont = 0;
         } else {
@@ -193,6 +194,8 @@ void* creandoAutosEste(void* arg) {
         struct Auto * a = (struct Auto*) malloc(sizeof (struct Auto));
         if (cont == k_amb) {
             a->prioridad = 1;
+            fflush(stdout);
+            printf("Esta llegando una ambulancia desde el Este\n");
             a->nombre = "Ambulancia";
             cont = 0;
         } else {
