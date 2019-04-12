@@ -136,8 +136,18 @@ void* Puente_A_Terabithia(void* arg) {
         }
         if (aux2) {
             fflush(stdout);
+<<<<<<< HEAD
             printf("El auto esta cruzando el puente: %s, %d, %2.f\n",
                     aux2->nombre, aux2->prioridad, aux2->velocidad);
+=======
+            if (aux2->direccion) {
+                printf("Esta cruzando desde el Este: %s, %d, %2.f\n",
+                        aux2->nombre, aux2->prioridad, aux2->velocidad);
+            } else {
+                printf("Esta cruzando desde el Oeste: %s, %d, %2.f\n",
+                        aux2->nombre, aux2->prioridad, aux2->velocidad);
+            }
+>>>>>>> branch 'master' of https://github.com/NaoRojas/ProyectoSO.git
             t = PUENTE.longitud / aux2->velocidad;
             sleep(t);
         } else {
@@ -147,7 +157,7 @@ void* Puente_A_Terabithia(void* arg) {
 }
 
 void* creandoAutosOeste(void* arg) {
-    int num_pth = 288;
+    int num_pth = OESTE.k_carros_e;
     int cont = 0;
     double randCrear;
     double rand;
@@ -160,6 +170,7 @@ void* creandoAutosOeste(void* arg) {
         struct Auto * a = (struct Auto*) malloc(sizeof (struct Auto));
         if (cont == k_amb) {
             a->prioridad = 1;
+            printf("Esta llegando una ambulancia desde el Oeste\n");
             a->nombre = "Ambulancia";
             cont = 0;
         } else {
@@ -180,7 +191,7 @@ void* creandoAutosOeste(void* arg) {
 }
 
 void* creandoAutosEste(void* arg) {
-    int num_pth = 300;
+    int num_pth = ESTE.k_carros_e;
     int cont = 0;
     double randCrear;
     double rand;
@@ -191,6 +202,8 @@ void* creandoAutosEste(void* arg) {
         struct Auto * a = (struct Auto*) malloc(sizeof (struct Auto));
         if (cont == k_amb) {
             a->prioridad = 1;
+            fflush(stdout);
+            printf("Esta llegando una ambulancia desde el Este\n");
             a->nombre = "Ambulancia";
             cont = 0;
         } else {
@@ -199,10 +212,14 @@ void* creandoAutosEste(void* arg) {
             cont++;
         }
         a->velocidad = (drand48() * 4 + 4);
+<<<<<<< HEAD
         a->direccion = 0;
         fflush(stdout);
         printf("LLegando auto desde el Este: %s, %d, %2.f\n",
                 a->nombre, a->prioridad, a->velocidad);
+=======
+        a->direccion = 1;
+>>>>>>> branch 'master' of https://github.com/NaoRojas/ProyectoSO.git
         enQueue(a, colita);
         rand = drand48() * 2.0;
         randCrear = -pro_lle * log(1 - rand);
@@ -231,8 +248,7 @@ void La_Ladrona_de_Libros() {
     ESTE.vel_max = number[5]; //Velocidad Maxima
     ESTE.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
     ESTE.k_amb = number[7]; //Prcentaje de ambulancias
-    //ESTE.k_amb = ESTE.k_amb * 100 / 300;
-    ESTE.k_amb = 14;
+    ESTE.k_amb = (ESTE.k_amb * 300) / 100;
     //Datos Oeste
     OESTE.k_carros_e = number[1]; //Cantidad de carros
     OESTE.pro_lle = number[2]; //Promedio de llegada
@@ -241,8 +257,8 @@ void La_Ladrona_de_Libros() {
     OESTE.vel_max = number[5]; //Velocidad Maxima
     OESTE.k_veh_x_pas = number[6]; //Cantidad de vehiculos por paso
     OESTE.k_amb = number[7]; //Prcentaje de ambulancias
-    //OESTE.k_amb = OESTE.k_amb * 100 / 288;
-    OESTE.k_amb = 14;
+    OESTE.k_amb = (ESTE.k_amb * 288) / 100;
+
     COLA_OESTE.ppio = NULL;
     COLA_ESTE.ppio = NULL;
 }
